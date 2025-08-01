@@ -12,14 +12,14 @@ define('SITE_NAME', 'Neodock Recipes');
 define('SITE_URL', 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']));
 
 // Database configuration for SQL Server
-define('DB_SERVER', 'gag');
+define('DB_SERVER', 'sql.ad.neodock.net');
 define('DB_USER', 'recipes');
 define('DB_PASSWORD', 'recipes'); // Change this!
 define('DB_NAME', 'recipes');
 
 // Recipes configuration
 define('RECIPES_DIR', 'repo');
-define('RECIPE_BASE_DIR', 'E:/recipes/');
+define('RECIPE_BASE_DIR', 'E:/inetpub/recipes/');
 
 // Rating functionality configuration
 define('RATING_ENABLED', true); // Master switch to enable/disable rating functionality
