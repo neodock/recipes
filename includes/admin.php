@@ -1,4 +1,6 @@
 <?php
+require_once 'ip_utils.php';
+
 /**
  * Admin functionality for Neodock Recipes
  */
@@ -8,45 +10,37 @@
  * 
  * @return bool True if user is allowed, false otherwise
  */
-function is_admin_allowed() {
+function is_admin_allowed(): bool
+{
     global $ADMIN_IP_ALLOWLIST;
 
-    // If admin functionality is disabled, nobody is allowed
+    // If USE_IP_ALLOWLIST is disabled, allow all IPs
     if (!defined('ADMIN_ENABLED') || !ADMIN_ENABLED) {
         return false;
     }
 
-    // Get client IP address
-    $client_ip = $_SERVER['REMOTE_ADDR'];
-    $client_hostname = gethostbyaddr($client_ip);
+    // If allowlist is empty, deny all
+    if (empty($ADMIN_IP_ALLOWLIST)) {
+        return false;
+    }
 
-    // Check if client IP is in the allowlist
+    $client_ip = get_client_ip();
+
+    // Check if IP is in allowlist
     foreach ($ADMIN_IP_ALLOWLIST as $allowed) {
-        // Check if it's a direct IP match
-        if ($allowed === $client_ip) {
-            return true;
-        }
-
-        // Check if it's a hostname match
-        if ($allowed === $client_hostname) {
-            return true;
-        }
-
-        // Check if it's a CIDR notation
-        if (strpos($allowed, '/') !== false) {
-            list($subnet, $mask) = explode('/', $allowed);
-
-            // Convert IP to binary string
-            $ip_binary = ip2long($client_ip);
-            $subnet_binary = ip2long($subnet);
-
-            // Create mask
-            $mask_binary = -1 << (32 - $mask);
-
-            // Check if IP is in subnet
-            if (($ip_binary & $mask_binary) === ($subnet_binary & $mask_binary)) {
+        // Check if it's a hostname
+        if (!filter_var($allowed, FILTER_VALIDATE_IP) && strpos($allowed, '/') === false) {
+            // Try to resolve hostname to IP
+            $resolved_ips = gethostbynamel($allowed);
+            if ($resolved_ips && in_array($client_ip, $resolved_ips)) {
                 return true;
             }
+            continue;
+        }
+
+        // Check if IP is in range
+        if (ip_in_range($client_ip, $allowed)) {
+            return true;
         }
     }
 

@@ -1,5 +1,6 @@
 <?php
 // Include necessary files
+require_once 'includes/admin.php';
 require_once 'includes/config.php';
 require_once 'includes/functions.php';
 require_once 'includes/db.php';
@@ -72,6 +73,17 @@ $rating_info = get_recipe_ratings($recipe_info['id']);
                     <li class="nav-item">
                         <a class="nav-link" href="top-rated.php">Top Rated</a>
                     </li>
+                    <?php if (is_admin_allowed()): ?>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-shield-alt"></i> Admin
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="admin/index.php">Dashboard</a></li>
+                                <li><a class="dropdown-item" href="admin/orphaned-records.php">Orphaned Records</a></li>
+                            </ul>
+                        </li>
+                    <?php endif; ?>
                 </ul>
                 <form class="d-flex" action="index.php" method="get">
                     <input class="form-control me-2" type="search" name="search" placeholder="Search recipes">

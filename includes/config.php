@@ -27,7 +27,6 @@ define('USE_IP_ALLOWLIST', true); // Enable IP allowlist for rating functionalit
 $RATING_IP_ALLOWLIST = [
     '127.0.0.1',          // localhost
     '10.0.0.0/8',         // Example corporate network range
-    '1.2.3.4',
     'neodock-pc.ad.neodock.net', // Allow by hostname
 ]; 
 
@@ -39,6 +38,5 @@ define('ADMIN_ENABLED', true); // Enable admin functionality
 $ADMIN_IP_ALLOWLIST = [
     '127.0.0.1',          // localhost
     '10.0.0.0/8',         // Example corporate network range
-    '1.2.3.4',
     'neodock-pc.ad.neodock.net', // Allow by hostname
 ];
