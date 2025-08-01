@@ -1,0 +1,66 @@
+# Enable rewriting engine
+RewriteEngine On
+
+# Redirect to HTTPS if available
+# Uncomment these lines in production
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Security measures
+
+# Disable directory browsing
+Options -Indexes
+
+# Protect hidden files
+<FilesMatch "^\.(htaccess|htpasswd|git|svn|DS_Store)">
+Order Allow,Deny
+Deny from all
+</FilesMatch>
+
+# Protect includes directory
+<IfModule mod_rewrite.c>
+RewriteRule ^includes/ - [F,L]
+</IfModule>
+
+# Protect db-setup.sql file
+<Files "db-setup.sql">
+Order Allow,Deny
+Deny from all
+</Files>
+
+# Protect download-bootstrap.php file after installation
+<Files "download-bootstrap.php">
+Order Allow,Deny
+Deny from all
+</Files>
+
+# PHP settings
+<IfModule mod_php5.c>
+    php_value upload_max_filesize 10M
+    php_value post_max_size 10M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+</IfModule>
+
+# Add MIME types for PDFs (in case server doesn't have it)
+AddType application/pdf .pdf
+
+# Enable browser caching
+<IfModule mod_expires.c>
+ExpiresActive On
+ExpiresByType text/css "access plus 1 year"
+ExpiresByType application/javascript "access plus 1 year"
+ExpiresByType image/jpeg "access plus 1 year"
+ExpiresByType image/png "access plus 1 year"
+ExpiresByType image/svg+xml "access plus 1 year"
+</IfModule>
+
+# Compress files
+<IfModule mod_deflate.c>
+AddOutputFilterByType DEFLATE text/plain
+AddOutputFilterByType DEFLATE text/html
+AddOutputFilterByType DEFLATE text/css
+AddOutputFilterByType DEFLATE application/javascript
+AddOutputFilterByType DEFLATE application/x-javascript
+AddOutputFilterByType DEFLATE application/json
+</IfModule>
