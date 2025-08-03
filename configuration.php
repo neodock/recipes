@@ -3,9 +3,17 @@ namespace Neodock
 {
     $config = Framework\Configuration::getInstance();
 
+//Paths and Directories
+    $config->set('rootdir', __DIR__);
+    $config->set('layoutdir', __DIR__ . DIRECTORY_SEPARATOR . 'layouts');
+    $config->set('modeldir', __DIR__  . DIRECTORY_SEPARATOR . 'models');
+    $config->set('staticdir', __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'static');
+    $config->set('pagedir', __DIR__ . DIRECTORY_SEPARATOR . 'pages');
+    $config->set('recipedir', __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'repo');
+
 //Debugging
     //(true|false) Enable debug mode.  To use, pass a 'debug=true' query string parameter to the site with this flag set to true.
-    $config->set('debug', true);
+    $config->set('debug', false);
 
 //Logging
     //(true|false) Enable logging to file.
@@ -13,6 +21,10 @@ namespace Neodock
 
     //(LogLevel) Log at levels at or above this one.  For example, Framework\LogLevel::Error() would log Error, Critical, Alert and Emergency messages
     $config->set('logger_minimumloglevel', Framework\LogLevel::Error());
+
+    //(string) full path to log file to write to
+    //example: to log to a file:    $config->set('logger_logfile', __DIR__ . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'neodock_recipes.log');
+    $config->set('logger_logfile', null);
 
 //Sessions
     //(true|false) Enable sessions
@@ -26,7 +38,7 @@ namespace Neodock
 
 //Site Setup
     //fully qualified or relative base url to prepend to generated links
-    $config->set('baseurl', "https://neodock-pc.ad.neodock.net/recipes");
+    $config->set('baseurl', "https://recipes.neodock.net/recipes");
 
 //Database
     //database type (mysql, pgsql, sqlsrv)

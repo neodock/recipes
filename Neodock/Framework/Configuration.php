@@ -58,7 +58,6 @@ namespace Neodock\Framework
                 Debug::logMessage('Attempting to set key \''.$key.'\' to a non-string value');
             }
 
-
             if (!array_key_exists($key, self::getInstance()->config))
             {
                 Debug::logMessage('...value for '. $key .' stored successfully');

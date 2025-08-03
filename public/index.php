@@ -20,14 +20,6 @@ namespace Neodock
         //setup and load configuration
         require_once(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'configuration.php');
 
-        //detect paths and add to config
-        Framework\Configuration::set('rootdir', __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR);
-        Framework\Configuration::set('layoutdir', __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'layouts');
-        Framework\Configuration::set('modeldir', __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'models');
-        Framework\Configuration::set('staticdir', __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'static');
-        Framework\Configuration::set('pagedir', __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'pages');
-        Framework\Configuration::set('recipe_repo', __DIR__ . DIRECTORY_SEPARATOR . 'repo');
-
         //default page -- /Home/Index if not already in a proper rewritten URL
         if (!array_key_exists('controller', $_GET) || !array_key_exists('page', $_GET))
         {

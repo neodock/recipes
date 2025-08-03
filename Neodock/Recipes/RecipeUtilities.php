@@ -7,7 +7,7 @@ class RecipeUtilities
         $config = \Neodock\Framework\Configuration::getInstance();
 
         $categories = [];
-        $repo_dir = $config->get('recipe_repo');
+        $repo_dir = $config->get('recipedir');
 
         if (is_dir($repo_dir)) {
             $dirs = scandir($repo_dir);
@@ -39,7 +39,7 @@ class RecipeUtilities
     public static function GetRecipes($search_query = '', $category_filter = '') {
         $config = \Neodock\Framework\Configuration::getInstance();
         $recipes = [];
-        $repo_dir = $config->get('recipe_repo');
+        $repo_dir = $config->get('recipedir');
 
         // Get all categories or just the filtered one
         $categories = [];

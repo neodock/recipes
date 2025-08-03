@@ -44,6 +44,8 @@ namespace Neodock\Framework
          */
         public function log($level, $message, array $context = array())
         {
+            $config = Configuration::getInstance();
+
             //is the level of this message <= the logging level from Config?
             if ($level->getLogLevelNumber() <= Configuration::get('logger_minimumloglevel')->getLogLevelNumber())
             {
@@ -67,8 +69,12 @@ namespace Neodock\Framework
                 //interpolate replacement values into the message text
                 $message = strtr($message, $replace);
 
-                //send message to error_log()
-                error_log($message);
+                //send message to error_log()... if logger_logfile is set, route there, else to system log
+                if (null === $config->get('logger_logfile')) {
+                    error_log($message);
+                } else {
+                    error_log($message . PHP_EOL, 3, $config->get('logger_logfile'));
+                }
             }
         }
 
