@@ -1,0 +1,14 @@
+{
+  "name": "neodock/recipes",
+  "description": "Cooking recipe organizer",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Jeff Zahorchak",
+      "email": "jeff@neodock.net"
+    }
+  ],
+  "require": {
+  }
+}
