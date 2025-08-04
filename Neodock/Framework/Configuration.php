@@ -61,11 +61,10 @@ namespace Neodock\Framework
             if (!array_key_exists($key, self::getInstance()->config))
             {
                 Debug::logMessage('...value for '. $key .' stored successfully');
-                self::getInstance()->config[$key] = $value;
             } else {
                 Debug::logMessage('...value for '. $key . ' overwritten successfully');
-                self::getInstance()->config[$key] = $value;
             }
+            self::getInstance()->config[$key] = $value;
         }
 
         /**

@@ -1,0 +1,6 @@
+parameters:
+	paths:
+		- layouts
+		- Neodock
+		- pages
+		- public

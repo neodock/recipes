@@ -20,6 +20,9 @@ namespace Neodock
         //setup and load configuration
         require_once(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'configuration.php');
 
+        //log page view
+        Framework\Logger::getInstance()->informational('Request to ' . $_SERVER['REQUEST_URI'] . ' received.');
+
         //default page -- /Home/Index if not already in a proper rewritten URL
         if (!array_key_exists('controller', $_GET) || !array_key_exists('page', $_GET))
         {
@@ -62,21 +65,9 @@ namespace Neodock
     catch (Web\PageNotFoundException $ex)
     {
         Framework\Debug::logMessage("In PageNotFound Handler...");
-        if (!is_null(Framework\Configuration::get('error_controller')))
-        {
-            Framework\Debug::logMessage('Overriding controller to ' . Framework\Configuration::get('error_controller'));
-            $controller = new Web\Controller(Framework\Configuration::get('error_controller'));
-        }
 
-        if (!is_null(Framework\Configuration::get('errorpage_404')))
-        {
-            Framework\Debug::logMessage('Overriding page to ' . Framework\Configuration::get('errorpage'));
-            $controller->LoadPage(Framework\Configuration::get('errorpage'));
-        } else {
-            $controller->LoadPage('404');
-        }
         header('HTTP/1.0 404 Not Found');
-        echo $controller->Render();
+        echo "<h3>404 Not Found</h3>";
     }
     catch (\Exception $ex) {
         Framework\Debug::logMessage('An unhandled exception occurred: ' . $ex->getMessage());

@@ -74,7 +74,7 @@ namespace Neodock\Framework
             // Catch any errors
             catch(\PDOException $e){
                 $this->error = $e->getMessage();
-                Debug::logMessage('A PDO error occurred: ' . $e->getMessage . '.');
+                Debug::logMessage('A PDO error occurred: ' . $this->error . '.');
                 throw new \Exception('Unable to connect to the database.',0,$e);
             }
         }

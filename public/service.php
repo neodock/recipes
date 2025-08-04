@@ -6,8 +6,12 @@ if (isset($_SERVER["HTTP_AUTHORIZATION"]) && strlen($_SERVER["HTTP_AUTHORIZATION
     if (strlen($header) > 0) {
         $decoded = base64_decode($header);
 
-        //validate that string is what you wanted.
+        if ($decoded == "neodock")
+        {
+            die("Success.");
+        }
     } else {
         // bad things happened here, abort, unauthorized, whatever.
+        die("Failure.");
     }
 }

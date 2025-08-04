@@ -1,6 +1,8 @@
 <?php
 namespace Neodock
 {
+    require_once(Framework\Configuration::getInstance()->get('basedir') . DIRECTORY_SEPARATOR . "vendor/autoload.php");
+
 	/**
 	 * Neodock Autoloader
 	 *
