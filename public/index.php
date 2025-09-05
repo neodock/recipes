@@ -3,15 +3,17 @@ namespace Neodock
 {
     try
     {
+        $basedir = dirname(__DIR__);
+
         //initialize Composer autoloader
-        require_once(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php');
+        require_once($basedir . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php');
 
         //initialize Neodock Autoloader
-        require_once(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Neodock' . DIRECTORY_SEPARATOR . 'Autoloader.php');
+        require_once($basedir . DIRECTORY_SEPARATOR . 'Neodock' . DIRECTORY_SEPARATOR . 'Autoloader.php');
         $autoloader = new Autoloader();
-        $autoloader->addNamespace('Neodock\Framework', __DIR__ . DIRECTORY_SEPARATOR. '..' . DIRECTORY_SEPARATOR . 'Neodock' . DIRECTORY_SEPARATOR . 'Framework', false);
-        $autoloader->addNamespace('Neodock\Web', __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Neodock' . DIRECTORY_SEPARATOR . 'Web', false);
-        $autoloader->addNamespace('Neodock\Recipes', __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Neodock' . DIRECTORY_SEPARATOR . 'Recipes', false);
+        $autoloader->addNamespace('Neodock\Framework', $basedir . DIRECTORY_SEPARATOR . 'Neodock' . DIRECTORY_SEPARATOR . 'Framework', false);
+        $autoloader->addNamespace('Neodock\Web', $basedir . DIRECTORY_SEPARATOR . 'Neodock' . DIRECTORY_SEPARATOR . 'Web', false);
+        $autoloader->addNamespace('Neodock\Recipes', $basedir . DIRECTORY_SEPARATOR . 'Neodock' . DIRECTORY_SEPARATOR . 'Recipes', false);
         $autoloader->register();
 
         //start debugging
