@@ -4,25 +4,10 @@ namespace Neodock\Recipes;
 class RecipeUtilities
 {
     public static function GetCategories() : array {
-        $config = \Neodock\Framework\Configuration::getInstance();
-
-        $categories = [];
-        $repo_dir = $config->get('recipedir');
-
-        if (is_dir($repo_dir)) {
-            $dirs = scandir($repo_dir);
-
-            foreach ($dirs as $dir) {
-                if ($dir !== '.' && $dir !== '..' && is_dir($repo_dir . '/' . $dir)) {
-                    $categories[] = $dir;
-                }
-            }
-
-            // Sort categories alphabetically
-            sort($categories, SORT_STRING | SORT_FLAG_CASE);
-        }
-
-        return $categories;
+        $db = new \Neodock\Framework\Database();
+        $db->query('SELECT count(1) AS recipecount, categories.id, categories.name FROM dbo.recipes INNER JOIN dbo.categories ON recipes.category_id = categories.id WHERE recipes.datedeleted IS NULL AND categories.datedeleted IS NULL GROUP BY categories.id, categories.name ORDER BY name');
+        $db->execute();
+        return $db->resultset();
     }
 
      public static function GetCategoryLinks() : string {
@@ -30,28 +15,27 @@ class RecipeUtilities
         $output = '';
 
         foreach ($categories as $category) {
-            $output .= '<li><a class="dropdown-item" href="index.php?module=Home&page=index&category=' . urlencode($category) . '">' . htmlspecialchars($category) . '</a></li>';
+            $output .= '<li><a class="dropdown-item" href="index.php?controller=Home&page=Index&category=' . urlencode($category['id']) . '">' . $category['name'] . '</a></li>';
         }
 
         return $output;
     }
 
-    public static function GetRecipes($search_query = '', $category_filter = '') {
+    public static function ReadCategoriesFromDisk() : array {
+        $config = \Neodock\Framework\Configuration::getInstance();
+        $repo_dir = $config->get('recipedir');
+        return array_diff(scandir($repo_dir), ['.', '..']);
+    }
+
+    public static function ReadRecipesFromDisk() : array {
         $config = \Neodock\Framework\Configuration::getInstance();
         $recipes = [];
         $repo_dir = $config->get('recipedir');
 
-        // Get all categories or just the filtered one
-        $categories = [];
-        if (!empty($category_filter)) {
-            $categories[] = $category_filter;
-        } else {
-            $categories = self::GetCategories();
-        }
+        $categories = self::GetCategories();
 
-        // For each category directory
         foreach ($categories as $category) {
-            $category_path = $repo_dir . '/' . $category;
+            $category_path = $repo_dir . DIRECTORY_SEPARATOR . $category['name'];
 
             if (is_dir($category_path)) {
                 $files = scandir($category_path);
@@ -59,65 +43,111 @@ class RecipeUtilities
                 foreach ($files as $file) {
                     // Check if it's a PDF file
                     if (pathinfo($file, PATHINFO_EXTENSION) === 'pdf') {
-                        $recipe_path = $category_path . '/' . $file;
-                        $recipe_title = str_replace('-', ' ', pathinfo($file, PATHINFO_FILENAME));
-
-                        // Skip if doesn't match search query
-                        if (!empty($search_query) && stripos($recipe_title, $search_query) === false) {
-                            continue;
-                        }
-
-                        // Get recipe ID and rating info from database
-                        $recipe_id = self::GetRecipeId($recipe_path);
-                        $rating_info = self::GetRecipeRatings($recipe_id);
+                        $recipe_path = $category_path . DIRECTORY_SEPARATOR . $file;
+                        $recipe_title = \Neodock\Framework\StringUtils::TitleCase(str_replace('-', ' ', pathinfo($file, PATHINFO_FILENAME)));
 
                         $recipes[] = [
-                            'id' => $recipe_id,
                             'title' => $recipe_title,
-                            'path' => $recipe_path,
-                            'category' => $category,
-                            'avg_rating' => $rating_info['avg_rating'],
-                            'ratings_count' => $rating_info['count']
+                            'filepath' => $recipe_path,
+                            'category_id' => $category['id'],
                         ];
                     }
                 }
             }
         }
-
-        // Also look for PDF files in the root of the repo directory
-        $files = scandir($repo_dir);
-        foreach ($files as $file) {
-            if (pathinfo($file, PATHINFO_EXTENSION) === 'pdf') {
-                $recipe_path = $repo_dir . '/' . $file;
-                $recipe_title = str_replace('-', ' ', pathinfo($file, PATHINFO_FILENAME));
-
-                // Skip if doesn't match search query or category filter
-                if (!empty($search_query) && stripos($recipe_title, $search_query) === false) {
-                    continue;
-                }
-                if (!empty($category_filter)) {
-                    continue; // Skip files in root if category filter is active
-                }
-
-                // Get recipe ID and rating info from database
-                $recipe_id = self::GetRecipeId($recipe_path);
-                $rating_info = self::GetRecipeRatings($recipe_id);
-
-                $recipes[] = [
-                    'id' => $recipe_id,
-                    'title' => $recipe_title,
-                    'path' => $recipe_path,
-                    'category' => 'Uncategorized',
-                    'avg_rating' => $rating_info['avg_rating'],
-                    'ratings_count' => $rating_info['count']
-                ];
-            }
-        }
-
         return $recipes;
     }
 
-    public static function GetRecipeInfo($recipe_path) {
+    /**
+     * @throws \Exception
+     */
+    public static function GetCategoryName($category_id) {
+        $db = new \Neodock\Framework\Database();
+        $db->query('SELECT name FROM dbo.categories WHERE id = :id');
+        $db->bind(':id', $category_id);
+        $db->execute();
+        $results = $db->resultset();
+        if (count($results) > 0) {
+            return $results[0]['name'];
+        } else {
+            throw new \Exception('Category not found');
+        }
+    }
+
+    public static function GetCategoryId(string $name) {
+        $db = new \Neodock\Framework\Database();
+        $db->query('SELECT id FROM dbo.categories WHERE name = :name');
+        $db->bind(':name', $name);
+        $db->execute();
+        $results = $db->resultset();
+        if (count($results) > 0) {
+            return $results[0]['id'];
+        } else {
+            throw new \Exception('Category not found');
+        }
+    }
+
+    public static function GetRecipes($search_query = '', $category_filter = ''): array {
+    $results = [];
+
+    $db = new \Neodock\Framework\Database();
+    $params = [];
+
+    $query = '
+        SELECT
+        r.id AS recipe_id,
+        r.title AS recipe_title,
+        r.filepath AS recipe_filepath,
+        c.id AS category_id,
+        c.name AS category_name,
+        COALESCE((SELECT AVG(rating) FROM dbo.ratings WHERE datedeleted IS NULL AND recipe_id = r.id), 0) AS ratings_average,
+        (SELECT COUNT(1) FROM dbo.ratings WHERE datedeleted IS NULL AND recipe_id = r.id) AS ratings_count
+    FROM	
+        dbo.recipes r
+        INNER JOIN dbo.categories c ON r.category_id = c.id
+    WHERE
+        r.datedeleted IS NULL
+        AND c.datedeleted IS NULL';
+
+    if ($category_filter != '') {
+        $query .= ' AND c.id = :category_id';
+        $params[':category_id'] = $category_filter;
+    }
+
+    if ($search_query != '') {
+        $query .= ' AND r.title LIKE :search_query';
+        $params[':search_query'] = '%' . $search_query . '%';
+    }
+
+    $db->query($query);
+    foreach ($params as $key => $value) {
+        $db->bind($key, $value);
+    }
+    $db->execute();
+    $results = $db->resultset();
+
+    return $results;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public static function GetRecipeInfo($id): array
+    {
+        $config = \Neodock\Framework\Configuration::getInstance();
+        $db = new \Neodock\Framework\Database();
+        $db->query('SELECT r.id AS recipe_id, r.title AS title, r.description AS description, r.filepath AS path, c.id AS category_id, c.name AS category FROM dbo.recipes r INNER JOIN dbo.categories c ON r.category_id = c.id WHERE r.id = :id AND r.datedeleted IS NULL AND c.datedeleted IS NULL');
+        $db->bind(':id', $id);
+        $db->execute();
+        $results = $db->resultset();
+
+        if (count($results) > 0) {
+            $results[0]['url'] = $config->get('baseurl') . '/repo/' . str_replace('\\', '/', str_replace($config->get('recipedir'), '', $results[0]['path']));
+            return $results[0];
+        } else {
+            throw new \Exception('Recipe not found');
+        }
+
         // Extract category from path
         $path_parts = explode('/', $recipe_path);
         $category = count($path_parts) > 2 ? $path_parts[1] : 'Uncategorized';

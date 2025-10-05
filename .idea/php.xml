@@ -71,8 +71,8 @@
   </component>
   <component name="PhpStan">
     <PhpStan_settings>
-      <phpstan_by_interpreter asDefaultInterpreter="true" interpreter_id="8bc0dd1d-57ee-4e26-bece-8ece798d9373" tool_path="E:\dev\recipes\vendor\bin\phpstan" timeout="60000" />
-      <PhpStanConfiguration tool_path="$PROJECT_DIR$/vendor/bin/phpstan" />
+      <phpstan_by_interpreter asDefaultInterpreter="true" deletedFromTheList="true" interpreter_id="8bc0dd1d-57ee-4e26-bece-8ece798d9373" tool_path="E:\dev\recipes\vendor\bin\phpstan.phar" timeout="60000" />
+      <PhpStanConfiguration deletedFromTheList="true" tool_path="$PROJECT_DIR$/vendor/bin/phpstan.phar" timeout="60000" />
     </PhpStan_settings>
   </component>
   <component name="PhpStanOptionsConfiguration">

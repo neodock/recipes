@@ -1,6 +1,7 @@
 .idea/
 logs/
 vendor/
+.phpunit.result.cache
 composer.lock
 phpunit.phar
 composer.phar

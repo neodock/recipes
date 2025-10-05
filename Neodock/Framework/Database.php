@@ -64,7 +64,6 @@ namespace Neodock\Framework
 
             // Set options
             $options = array(
-                \PDO::ATTR_PERSISTENT    => !$for_session,
                 \PDO::ATTR_ERRMODE       => \PDO::ERRMODE_EXCEPTION
             );
             // Create a new PDO instanace
@@ -93,9 +92,10 @@ namespace Neodock\Framework
          * Binds a parameter of the optionally specified type against the current query
          * @param string $param
          * @param mixed $value
-         * @param string $type
+         * @param string|null $type
          */
-        public function bind($param, $value, $type = null){
+        public function bind(string $param, mixed $value, ?string $type = null): void
+        {
             if (is_null($type)) {
                 switch (true) {
                     case is_int($value):
@@ -118,7 +118,8 @@ namespace Neodock\Framework
          * Executes the prepared query against the currently connected database
          * @return bool
          */
-        public function execute(){
+        public function execute(): bool
+        {
             return $this->stmt->execute();
         }
 
@@ -126,7 +127,8 @@ namespace Neodock\Framework
          * Returns the associative array result set (all rows) from the executed query
          * @return array
          */
-        public function resultset(){
+        public function resultset(): array
+        {
             $this->execute();
             return $this->stmt->fetchAll(\PDO::FETCH_ASSOC);
         }
@@ -135,7 +137,8 @@ namespace Neodock\Framework
          * Returns the associative array result set (one row) from the executed query
          * @return array
          */
-        public function single(){
+        public function single(): array
+        {
             $this->execute();
             return $this->stmt->fetch(\PDO::FETCH_ASSOC);
         }
@@ -144,7 +147,8 @@ namespace Neodock\Framework
          * Returns the count of rows in the result set of the last executed query
          * @return int
          */
-        public function rowCount(){
+        public function rowCount(): int
+        {
             return $this->stmt->rowCount();
         }
 
@@ -152,7 +156,8 @@ namespace Neodock\Framework
          * Returns the last inserted id (serial/autonumber) of the last inserted row
          * @return string
          */
-        public function lastInsertId(){
+        public function lastInsertId(): string
+        {
             return $this->dbh->lastInsertId();
         }
 
@@ -160,7 +165,8 @@ namespace Neodock\Framework
          * Begins a database transaction
          * @return bool
          */
-        public function beginTransaction(){
+        public function beginTransaction(): bool
+        {
             return $this->dbh->beginTransaction();
         }
 
@@ -168,7 +174,8 @@ namespace Neodock\Framework
          * Commits the active database transaction
          * @return bool
          */
-        public function endTransaction(){
+        public function endTransaction(): bool
+        {
             return $this->dbh->commit();
         }
 
@@ -176,7 +183,8 @@ namespace Neodock\Framework
          * Rolls back the active database transaction
          * @return bool
          */
-        public function cancelTransaction(){
+        public function cancelTransaction(): bool
+        {
             return $this->dbh->rollBack();
         }
 
@@ -184,8 +192,9 @@ namespace Neodock\Framework
          * Dumps the debugging parameters from PDO to standard output
          * @return void
          */
-        public function debugDumpParams(){
-            return $this->stmt->debugDumpParams();
+        public function debugDumpParams(): void
+        {
+            $this->stmt->debugDumpParams();
         }
 
         /**

@@ -34,7 +34,7 @@ namespace Neodock
     $config->set('session_config', false);
 
     //Session storage provider (file, database)
-    $config->set('session_storage', 'database');
+    $config->set('session_storage', 'file');
 
 //Site Setup
     //fully qualified or relative base url to prepend to generated links
@@ -42,17 +42,17 @@ namespace Neodock
 
 //Database
     //database type (mysql, pgsql, sqlsrv)
-    $config->set('db_type', 'pgsql');
+    $config->set('db_type', 'sqlsrv');
 
     //db server connection string
     //Example:  mysql:host=127.0.0.1;port=3306;dbname=neodock
     //Example:  pgsql:host=127.0.0.1;port=5432;dbname=neodock
-    //Example:  sqlsrv:host=127.0.0.1;port=5432;dbname=neodock
-    $config->set('db_dsn', 'pgsql:host=127.0.0.1;port=5432;dbname=neodock');
+    //Example:  sqlsrv:Server=127.0.0.1,1433;Database=neodock
+    $config->set('db_dsn', 'sqlsrv:Server=sql2022.ad.neodock.net,1433;Database=NeodockRecipes');
 
     //db login/username
-    $config->set('db_login', 'databaseusername');
-    $config->set('db_password', 'supersecret123');
+    $config->set('db_login', 'neodockrecipes');
+    $config->set('db_password', 'neodockchef01F&');
 
 
 //Recipes configuration
