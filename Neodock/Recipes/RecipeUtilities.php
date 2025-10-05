@@ -142,7 +142,7 @@ class RecipeUtilities
         $results = $db->resultset();
 
         if (count($results) > 0) {
-            $results[0]['url'] = $config->get('baseurl') . '/repo/' . str_replace('\\', '/', str_replace($config->get('recipedir'), '', $results[0]['path']));
+            $results[0]['url'] = $config->get('baseurl') . '/repo' . str_replace('\\', '/', str_replace($config->get('recipedir'), '', $results[0]['path']));
             return $results[0];
         } else {
             throw new \Exception('Recipe not found');
