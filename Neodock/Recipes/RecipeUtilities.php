@@ -198,51 +198,7 @@ class RecipeUtilities
         return $db->resultset() ?? [];
     }
 
-    public static function GetRecipeId($path) : int {
-        return 0;
-        global $conn;
-
-        // Check if recipe exists in database
-        $sql = "SELECT id FROM recipes WHERE path = ?";
-        $stmt = sqlsrv_prepare($conn, $sql, array($path));
-        sqlsrv_execute($stmt);
-
-        if ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-            return $row['id'];
-        }
-
-        // Recipe doesn't exist, create it
-        // Extract category from path
-        $path_parts = explode('/', $path);
-        $category = count($path_parts) > 2 ? $path_parts[1] : 'Uncategorized';
-
-        // Extract title from filename
-        $filename = pathinfo($path, PATHINFO_FILENAME);
-        $title = str_replace('-', ' ', $filename);
-
-        // Insert recipe directly without calling get_recipe_info()
-        $sql = "INSERT INTO recipes (path, title, category) VALUES (?, ?, ?)";
-        $params = array($path, $title, $category);
-
-        $stmt = sqlsrv_prepare($conn, $sql, $params);
-        if (sqlsrv_execute($stmt)) {
-            // Get the ID of the inserted recipe
-            $sql = "SELECT id FROM recipes WHERE path = ?";
-            $stmt = sqlsrv_prepare($conn, $sql, array($path));
-            sqlsrv_execute($stmt);
-
-            if ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                return $row['id'];
-            }
-        }
-
-        // If something went wrong, return 0
-        return 0;
-    }
-
     public static function GetRecipeRatings($recipe_id) : array {
-        //return array('avg_rating' => 0, 'count' => 0);
-
         $db = new \Neodock\Framework\Database();
         $db->query('SELECT AVG(rating) as avg_rating, COUNT(id) as count FROM dbo.ratings WHERE recipe_id = :id');
         $db->bind(':id', $recipe_id);
