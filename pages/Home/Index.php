@@ -58,7 +58,7 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h4 class="mb-0">Top 20 Recipes</h4>
-                            <a href="top-rated.php" class="btn btn-sm btn-outline-primary">View Details</a>
+                            <a href="index.php?controller=Home&page=TopRated" class="btn btn-sm btn-outline-primary">View Details</a>
                         </div>
                         <div class="card-body">
                             <div class="row row-cols-1 row-cols-md-4 g-4">

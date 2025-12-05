@@ -53,6 +53,9 @@ namespace Neodock\Framework
          */
         private $stmt;
 
+        /**
+         * @throws \Exception
+         */
         public function __construct(bool $for_session = false){
             //initialize values
             Debug::logMessage('Initialized Database class.');
@@ -82,7 +85,8 @@ namespace Neodock\Framework
          * Sets and prepares a database query aganst the currently connected database
          * @param string $query
          */
-        public function query($query){
+        public function query(string $query): void
+        {
             Debug::logMessage('Executing SQL query: ' . $query . '.');
 
             $this->stmt = $this->dbh->prepare($query);
@@ -201,7 +205,8 @@ namespace Neodock\Framework
          * Closes the database connection
          * @return bool
          */
-        public function close(){
+        public function close(): bool
+        {
             $this->stmt = null;
             $this->dbh = null;
             return true;

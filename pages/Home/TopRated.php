@@ -1,9 +1,9 @@
 <?php
+    $recipes = \Neodock\Recipes\RecipeUtilities::GetTopRatedRecipes();
 ?>
 <!-- Main Content -->
 <div class="container mt-4">
     <h1 class="mb-4">Top Rated Recipes</h1>
-
     <?php if (empty($recipes)): ?>
         <div class="alert alert-info">No rated recipes found yet. Be the first to rate a recipe!</div>
     <?php else: ?>
@@ -15,10 +15,10 @@
                             <h5 class="card-title"><?php echo $recipe['title']; ?></h5>
                             <p class="card-text">Category: <?php echo $recipe['category']; ?></p>
                             <div class="mb-2">
-                                <?php echo display_rating($recipe['avg_rating']); ?>
+                                <?php echo \Neodock\Recipes\RecipeUtilities::DisplayRating($recipe['avg_rating']); ?>
                                 <small class="text-muted">(<?php echo $recipe['ratings_count']; ?> ratings)</small>
                             </div>
-                            <a href="index.php?controller=Home&page=ViewRecipe&path=<?php echo urlencode($recipe['path']); ?>" class="btn btn-primary">View Recipe</a>
+                            <a href="index.php?controller=Home&page=ViewRecipe&id=<?php echo $recipe['id']; ?>" class="btn btn-primary">View Recipe</a>
                         </div>
                     </div>
                 </div>

@@ -8,13 +8,14 @@
     $recipe_info = \Neodock\Recipes\RecipeUtilities::GetRecipeInfo($_GET['id']);
 
     // Handle rating submission
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['rating'])) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['rating']) && \Neodock\Recipes\AdminUtilities::canRateRecipe()) {
         $rating = intval($_POST['rating']);
         $recipe_id = $_POST['recipe_id'];
 
         // Validate rating (1-10)
         if ($rating >= 1 && $rating <= 10) {
-            //save_rating($recipe_id, $rating);
+            \Neodock\Recipes\RecipeUtilities::RateRecipe($recipe_id, $rating);
+
             // Refresh the page to show updated rating
             header('Location: index.php?controller=Home&page=ViewRecipe&id=' . $_GET['id'] . '&rated=1');
             exit;
@@ -62,7 +63,7 @@
             </div>
 
             <!-- Rating Form -->
-            <?php if (defined('RATING_ENABLED') && RATING_ENABLED && \Neodock\Recipes\AdminUtilities::isClientIPAllowed()): ?>
+            <?php if (\Neodock\Recipes\AdminUtilities::canRateRecipe()): ?>
                 <div class="card mt-4">
                     <div class="card-header">
                         <h5>Rate this recipe</h5>
@@ -85,7 +86,7 @@
             <?php else: ?>
                 <div class="card mt-4 bg-light">
                     <div class="card-body text-center">
-                        <p class="mb-0"><i class="fas fa-info-circle"></i> Rating functionality is only available from allowed networks.</p>
+                        <p class="mb-0"><i class="fas fa-info-circle"></i> Rating functionality is only available from allowed client networks/IPs.</p>
                     </div>
                 </div>
             <?php endif; ?>

@@ -1,16 +1,14 @@
 <?php
 namespace Neodock\Recipes;
 
+use Neodock\Framework\Debug;
+use Neodock\Framework\DebugLog;
+
 class AdminUtilities
 {
-    public static function IsAdmin() : bool {
-        //TODO: implement
-        return true;
-    }
-
     public static function IsIPInRange($ip, $range) : bool {
         // If the range doesn't contain a CIDR prefix, it's a single IP
-        if (str_contains($range, '/')) {
+        if (!str_contains($range, '/')) {
             return $ip === $range;
         }
 
@@ -33,33 +31,28 @@ class AdminUtilities
 
             // Validate the IP format
             if (filter_var($client_ip, FILTER_VALIDATE_IP)) {
+                Debug::logMessage("Client IP from X-Forwarded-For: $client_ip");
                 return $client_ip;
             }
         }
 
         // Fallback to REMOTE_ADDR if X-Forwarded-For is not valid
+        Debug::logMessage("Client IP from REMOTE_ADDR: {$_SERVER['REMOTE_ADDR']}");
         return $_SERVER['REMOTE_ADDR'];
     }
 
-    public static function IsClientIPAllowed() : bool {
+    public static function IsClientIPAllowed($iplist) : bool {
         $config = \Neodock\Framework\Configuration::getInstance();
 
-        // If USE_IP_ALLOWLIST is disabled, allow all IPs
-        if (!$config->get('use_ip_allowlist')) {
-            return true;
-        }
-
-        $ips = $config->get('ip_allowlist');
-
-        // If allowlist is empty, deny all
-        if (empty($ips)) {
+        // If $iplist is empty, deny access
+        if (empty($iplist) || !is_array($iplist) || count($iplist) == 0) {
             return false;
         }
 
         $client_ip = self::GetClientIP();
 
         // Check if IP is in allowlist
-        foreach ($ips as $allowed) {
+        foreach ($iplist as $allowed) {
             // Check if it's a hostname
             if (!filter_var($allowed, FILTER_VALIDATE_IP) && !str_contains($allowed, '/')) {
                 // Try to resolve hostname to IP
@@ -74,6 +67,32 @@ class AdminUtilities
             if (self::IsIPInRange($client_ip, $allowed)) {
                 return true;
             }
+        }
+
+        return false;
+    }
+
+    public static function CanRateRecipe(): bool {
+        $config = \Neodock\Framework\Configuration::getInstance();
+        $enabled = $config->get('enable_ratings');
+
+        if (!$enabled) {
+            return false;
+        } else if (self::IsClientIPAllowed($config->get('ratings_trusted_ips'))) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function IsAdmin() : bool {
+        $config = \Neodock\Framework\Configuration::getInstance();
+        $enabled = $config->get('enable_admin');
+
+        if (!$enabled) {
+            return false;
+        } else if (self::IsClientIPAllowed($config->get('admin_trusted_ips'))) {
+            return true;
         }
 
         return false;

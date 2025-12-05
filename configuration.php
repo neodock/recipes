@@ -58,11 +58,14 @@ namespace Neodock
 //Recipes configuration
     //Enable ratings?
     $config->set('enable_ratings', true);
-    $config->set('ratings_trusted_ips', [
+    $config->set('ratings_trusted_ips',
+        [
         '127.0.0.1',          // localhost
         '10.0.0.0/8',         // Example corporate network range
+        '71.251.155.66',      // Allow an IP address
         'neodock-pc.ad.neodock.net', // Allow by hostname
-    ]);
+        ]
+    );
 
     //Enable admin functions?
     $config->set('enable_admin', true);

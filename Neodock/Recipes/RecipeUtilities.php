@@ -147,27 +147,10 @@ class RecipeUtilities
         } else {
             throw new \Exception('Recipe not found');
         }
-
-        // Extract category from path
-        $path_parts = explode('/', $recipe_path);
-        $category = count($path_parts) > 2 ? $path_parts[1] : 'Uncategorized';
-
-        // Extract title from filename
-        $filename = pathinfo($recipe_path, PATHINFO_FILENAME);
-        $title = str_replace('-', ' ', $filename);
-
-        // Get recipe ID
-        $recipe_id = self::GetRecipeId($recipe_path);
-
-        return [
-            'id' => $recipe_id,
-            'title' => $title,
-            'path' => $recipe_path,
-            'category' => $category
-        ];
     }
 
-    public static function DisplayRating($rating) {
+    public static function DisplayRating($rating): string
+    {
         $rating = round($rating * 2) / 2; // Round to nearest 0.5
         $output = '<div class="stars">';
 
@@ -197,32 +180,22 @@ class RecipeUtilities
      * @param int $limit Number of recipes to retrieve
      * @return array List of top rated recipes
      */
-    public static function GetTopRatedRecipes($limit = 20) {
-        return [];
-
-        global $conn;
-
-        $recipes = [];
-
-        $sql = "SELECT r.id, r.path, r.title, r.category, 
+    public static function GetTopRatedRecipes(int $limit = 20): array {
+        $db = new \Neodock\Framework\Database();
+        $db->query(
+            'SELECT r.id, r.filepath AS path, r.title, c.name AS category, 
                  AVG(rt.rating) as avg_rating, 
                  COUNT(rt.id) as ratings_count 
-           FROM recipes r 
-           INNER JOIN ratings rt ON r.id = rt.recipe_id 
-           GROUP BY r.id, r.path, r.title, r.category 
-           HAVING COUNT(rt.id) >= 1 
-           ORDER BY avg_rating DESC, ratings_count DESC 
-           OFFSET 0 ROWS FETCH NEXT ? ROWS ONLY";
-
-        $stmt = sqlsrv_prepare($conn, $sql, array($limit));
-
-        if (sqlsrv_execute($stmt)) {
-            while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-                $recipes[] = $row;
-            }
-        }
-
-        return $recipes;
+                 FROM recipes r 
+                 INNER JOIN ratings rt ON r.id = rt.recipe_id 
+                 INNER JOIN categories c ON r.category_id = c.id
+                 GROUP BY r.id, r.filepath, r.title, c.name
+                 HAVING COUNT(rt.id) >= 1 
+                 ORDER BY avg_rating DESC, ratings_count DESC 
+                 OFFSET 0 ROWS FETCH NEXT :limit ROWS ONLY');
+        $db->bind(':limit', $limit);
+        $db->execute();
+        return $db->resultset() ?? [];
     }
 
     public static function GetRecipeId($path) : int {
@@ -268,23 +241,21 @@ class RecipeUtilities
     }
 
     public static function GetRecipeRatings($recipe_id) : array {
-        return array('avg_rating' => 0, 'count' => 0);
+        //return array('avg_rating' => 0, 'count' => 0);
 
-        global $conn;
+        $db = new \Neodock\Framework\Database();
+        $db->query('SELECT AVG(rating) as avg_rating, COUNT(id) as count FROM dbo.ratings WHERE recipe_id = :id');
+        $db->bind(':id', $recipe_id);
+        $db->execute();
+        return $db->resultset()[0];
+    }
 
-        $sql = "SELECT AVG(rating) as avg_rating, COUNT(id) as count 
-           FROM ratings WHERE recipe_id = ?";
-
-        $stmt = sqlsrv_prepare($conn, $sql, array($recipe_id));
-        sqlsrv_execute($stmt);
-
-        if ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-            return array(
-                'avg_rating' => $row['avg_rating'] ? $row['avg_rating'] : 0,
-                'count' => $row['count']
-            );
-        }
-
-        return array('avg_rating' => 0, 'count' => 0);
+    public static function RateRecipe($recipe_id, $rating): void
+    {
+        $db = new \Neodock\Framework\Database();
+        $db->query('INSERT INTO dbo.ratings (recipe_id, rating, dateadded) VALUES (:id, :rating, CURRENT_TIMESTAMP)');
+        $db->bind(':id', $recipe_id);
+        $db->bind(':rating', $rating);
+        $db->execute();
     }
 }

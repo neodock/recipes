@@ -41,7 +41,7 @@ namespace Neodock
 
         //handle theme, search, parameters, etc.
         // Get current theme preference (default to dark)
-        $theme = isset($_COOKIE['theme']) ? $_COOKIE['theme'] : 'dark';
+        $theme = $_COOKIE['theme'] ?? 'dark';
 
         // Get search query if exists
         $search_query = isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '';
