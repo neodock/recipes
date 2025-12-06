@@ -10,8 +10,8 @@
 
     $db->query('SELECT id, filepath FROM dbo.recipes WHERE datedeleted IS NULL');
     $db->execute();
-
     $result = $db->resultset();
+
     $dbrecords = [];
     foreach ($result as $row) {
         $dbrecords[$row['id']] = $row['filepath'];
@@ -41,6 +41,9 @@
         $db->bind(':id', $id);
         $db->execute();
     }
+
+    $db->query('UPDATE categories SET datedeleted=CURRENT_TIMESTAMP WHERE id NOT IN (SELECT DISTINCT category_id FROM dbo.recipes r WHERE r.datedeleted IS NULL) and datedeleted IS NULL');
+    $db->execute();
 ?>
 <!-- Main Content -->
 <div class="container mt-4">
