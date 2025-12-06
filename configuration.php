@@ -75,6 +75,7 @@ namespace Neodock
 
 //Site Setup
     //fully qualified or relative base url to prepend to generated links
+    $config->set('sitetitle', 'Neodock Recipes');
     $config->set('baseurl', "https://www.neodock.net/recipes");
 
 //Database

@@ -16,7 +16,7 @@
         </div>
     <?php else: ?>
         <div class="jumbotron p-5 mb-4 rounded">
-            <h1 class="display-4">Welcome to Neodock Recipes</h1>
+            <h1 class="display-4">Welcome to <?=\Neodock\Framework\Configuration::get('sitetitle')?></h1>
             <p class="lead">Browse categories below, check out our top-rated recipes, or use the search box to find specific recipes.</p>
         </div>
     <?php endif; ?>

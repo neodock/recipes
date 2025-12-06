@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neodock Recipes</title>
+    <title><?=\Neodock\Framework\Configuration::get('sitetitle')?></title>
     <!-- Bootstrap CSS -->
     <link href="%%%BASEURL%%%/static/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
@@ -18,7 +18,7 @@
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-        <a class="navbar-brand" href="index.php?controller=Home&page=Index">Neodock Recipes</a>
+        <a class="navbar-brand" href="index.php?controller=Home&page=Index"><?=\Neodock\Framework\Configuration::get('sitetitle')?></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -70,7 +70,7 @@
 <!-- Footer -->
 <footer class="bg-dark text-white mt-5 py-4">
     <div class="container text-center">
-        <p>An open source project by <a href="https://neodock.net">Neodock</a></p>
+        <p>An open source project by <a href="https://neodock.net">Neodock</a><br/>Code available at <a href="https://github.com/neodock/recipes">github.com/neodock/recipes</a></p>
     </div>
 </footer>
 
