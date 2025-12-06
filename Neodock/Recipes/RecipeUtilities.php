@@ -5,7 +5,8 @@ class RecipeUtilities
 {
     public static function GetCategories() : array {
         $db = new \Neodock\Framework\Database();
-        $db->query('SELECT count(1) AS recipecount, categories.id, categories.name FROM dbo.recipes INNER JOIN dbo.categories ON recipes.category_id = categories.id WHERE recipes.datedeleted IS NULL AND categories.datedeleted IS NULL GROUP BY categories.id, categories.name ORDER BY name');
+        //$db->query('SELECT count(1) AS recipecount, categories.id, categories.name FROM dbo.recipes INNER JOIN dbo.categories ON recipes.category_id = categories.id WHERE recipes.datedeleted IS NULL AND categories.datedeleted IS NULL GROUP BY categories.id, categories.name ORDER BY name');
+        $db->query('SELECT count(1) AS recipecount, categories.id, categories.name FROM dbo.categories LEFT OUTER JOIN dbo.recipes ON categories.id = recipes.category_id WHERE recipes.datedeleted IS NULL AND categories.datedeleted IS NULL GROUP BY categories.id, categories.name ORDER BY name');
         $db->execute();
         return $db->resultset();
     }

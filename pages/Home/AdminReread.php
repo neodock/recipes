@@ -29,9 +29,12 @@
     }
 
     $recipes = \Neodock\Recipes\RecipeUtilities::ReadRecipesFromDisk();
+
     $recipestoadd = [];
     foreach ($recipes as $recipe) {
         foreach ($reciperesults as $reciperesult) {
+          // echo $reciperesult['filepath'] . " == " . $recipe['filepath'] . "?<br/>";
+
             if ($reciperesult['filepath'] == $recipe['filepath']) {
                continue 2;
             }
@@ -40,7 +43,7 @@
     }
 
     if (count($recipestoadd) > 0) {
-        $db->query('INSERT INTO dbo.recipes (category_id, title, filepath) VALUES (:category, :title, :filepath)');
+        $db->query('INSERT INTO dbo.recipes (category_id, title, filepath, dateadded) VALUES (:category, :title, :filepath, CURRENT_TIMESTAMP)');
         foreach ($recipestoadd as $recipe) {
             $db->bind(':category', $recipe['category_id']);
             $db->bind(':title', $recipe['title']);
