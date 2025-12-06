@@ -63,7 +63,7 @@ class RecipeUtilities
      */
     public static function GetCategoryName($category_id) {
         $db = new \Neodock\Framework\Database();
-        $db->query('SELECT name FROM dbo.categories WHERE id = :id');
+        $db->query('SELECT name FROM dbo.categories WHERE id = :id AND datedeleted IS NULL');
         $db->bind(':id', $category_id);
         $db->execute();
         $results = $db->resultset();
@@ -76,7 +76,7 @@ class RecipeUtilities
 
     public static function GetCategoryId(string $name) {
         $db = new \Neodock\Framework\Database();
-        $db->query('SELECT id FROM dbo.categories WHERE name = :name');
+        $db->query('SELECT id FROM dbo.categories WHERE name = :name AND datedeleted IS NULL');
         $db->bind(':name', $name);
         $db->execute();
         $results = $db->resultset();
@@ -189,6 +189,7 @@ class RecipeUtilities
                  FROM recipes r 
                  INNER JOIN ratings rt ON r.id = rt.recipe_id 
                  INNER JOIN categories c ON r.category_id = c.id
+                 WHERE r.datedeleted IS NULL AND c.datedeleted IS NULL
                  GROUP BY r.id, r.filepath, r.title, c.name
                  HAVING COUNT(rt.id) >= 1 
                  ORDER BY avg_rating DESC, ratings_count DESC 
@@ -200,7 +201,7 @@ class RecipeUtilities
 
     public static function GetRecipeRatings($recipe_id) : array {
         $db = new \Neodock\Framework\Database();
-        $db->query('SELECT AVG(rating) as avg_rating, COUNT(id) as count FROM dbo.ratings WHERE recipe_id = :id');
+        $db->query('SELECT AVG(rating) as avg_rating, COUNT(id) as count FROM dbo.ratings WHERE recipe_id = :id AND datedeleted IS NULL');
         $db->bind(':id', $recipe_id);
         $db->execute();
         return $db->resultset()[0];
