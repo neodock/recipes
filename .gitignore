@@ -5,4 +5,4 @@ vendor/
 composer.lock
 phpunit.phar
 composer.phar
-configuration_local.php
+/configuration_local.php
