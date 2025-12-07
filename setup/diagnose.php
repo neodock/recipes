@@ -92,8 +92,12 @@
     $composerlocation = $basedir . DIRECTORY_SEPARATOR . 'composer.phar';
 
     if (!file_exists($composerlocation)) {
-        display('ERROR: Composer is NOT OK, '. $composerlocation .' is missing, you need to install it and then run composer update.');
-        display('Please download composer.phar from https://getcomposer.org/download/ and follow the commandline install instructions.');
+        display('ERROR: Composer is NOT OK, '. $composerlocation .' is missing, you need to install it and then rerun this script.');
+        display('Please run the following commands one at a time from the project root directory (inside of ' . dirname(__FILE__, 2)  . '):');
+        displayblank();
+        display(PHP_BINARY . ' -r "copy(\'https://getcomposer.org/installer\', \'composer-setup.php\');"');
+        display(PHP_BINARY . ' composer-setup.php');
+
         display('Once composer is installed, run "composer update" from the commandline in the root directory of this project, and then rerun this script.');
         die();
     } else {
