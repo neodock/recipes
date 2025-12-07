@@ -108,7 +108,7 @@
     $returncode = 0;
 
     display('Installing/Updating Composer dependencies...');
-    $composercommand = 'cd ' . $projectroot . ' && '. PHP_BINARY . ' ' . $composerlocation . ' --quiet update';
+    $composercommand = 'cd ' . $projectroot . ' && '. PHP_BINARY . ' ' . $composerlocation . ' --quiet --no-dev update';
     exec($composercommand, $output, $returncode);
 
     if ($returncode !== 0) {
