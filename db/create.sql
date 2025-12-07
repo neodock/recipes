@@ -12,6 +12,16 @@ GO
 USE NeodockRecipes;
 GO
 
+CREATE TABLE dbo.dbmaintenance (
+    id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    version varchar(255) NOT NULL,
+    inprogress bit NOT NULL,
+    dateadded DATETIME2 NOT NULL DEFAULT getdate()
+);
+
+CREATE UNIQUE INDEX IX_dbmaintenance_version ON dbo.dbmaintenance (version);
+INSERT INTO dbo.dbmaintenance (version, inprogress) VALUES ('1.0.0', 0);
+
 CREATE TABLE dbo.categories (
     id BIGINT IDENTITY(1,1) NOT NULL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -20,7 +30,7 @@ CREATE TABLE dbo.categories (
     datedeleted DATETIME2
 );
 
-CREATE UNIQUE INDEX IX_categories_name ON dbo.categories (name);
+CREATE UNIQUE INDEX IX_categories_name ON dbo.categories (name) WHERE datedeleted IS NULL;
 CREATE NONCLUSTERED INDEX IX_categories_datedeleted ON dbo.categories (datedeleted);
 
 CREATE TABLE dbo.recipes (
@@ -34,7 +44,7 @@ CREATE TABLE dbo.recipes (
     category_id BIGINT NOT NULL
 );
 
-CREATE UNIQUE INDEX IX_recipes_title ON dbo.recipes (title);
+CREATE UNIQUE INDEX IX_recipes_title ON dbo.recipes (title) WHERE datedeleted IS NULL;
 CREATE NONCLUSTERED INDEX IX_recipes_filepath ON dbo.recipes (filepath);
 CREATE NONCLUSTERED INDEX IX_recipes_datedeleted ON dbo.recipes (datedeleted);
 CREATE NONCLUSTERED INDEX IX_recipes_category_id ON dbo.recipes (category_id);

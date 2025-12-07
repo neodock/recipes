@@ -1,6 +1,2 @@
 parameters:
-	paths:
-		- layouts
-		- Neodock
-		- pages
-		- public
+    level: 8
