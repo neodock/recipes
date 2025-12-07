@@ -35,7 +35,7 @@
                             $categories = \Neodock\Recipes\RecipeUtilities::GetCategories();
                             foreach ($categories as $category):
                                 ?>
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-12">
                                     <a href="index.php?controller=Home&page=Index&category=<?=$category['id']; ?>" class="text-decoration-none">
                                         <div class="d-flex align-items-center">
                                             <i class="fas fa-folder me-2 text-warning"></i>
@@ -86,18 +86,20 @@
     <?php else: ?>
         <!-- Only show recipes when a category is selected or search is performed -->
         <?php if (!empty($recipes)): ?>
-            <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="row row-cols-1 g-4">
                 <?php foreach ($recipes as $recipe): ?>
                     <div class="col">
                         <div class="card h-100">
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo \Neodock\Framework\StringUtils::TitleCase($recipe['recipe_title']); ?></h5>
-                                <p class="card-text">Category: <?php echo $recipe['category_name']; ?></p>
                                 <div class="mb-2">
                                     <?php echo \Neodock\Recipes\RecipeUtilities::DisplayRating($recipe['ratings_average']); ?>
-                                    <small class="text-muted">(<?php echo $recipe['ratings_count']; ?> ratings)</small>
+                                    <small class="text-muted">(<?php echo $recipe['ratings_count']; ?> ratings)</small>&nbsp;&nbsp;
+                                    <a href="index.php?controller=Home&page=ViewRecipe&id=<?=$recipe['recipe_id']?>" class="btn btn-primary">View Recipe</a>&nbsp;&nbsp;
+                                    <a href="index.php?controller=Home&page=ViewRecipe&id=<?=$recipe['recipe_id']?>" target="_blank" class="btn btn-info"><i class="fas fa-external-link-alt"></i> Open in New Tab</a>&nbsp;&nbsp;
+                                    <a href="<?=str_replace('\\', '/', str_replace(str_replace('/', '\\', \Neodock\Framework\Configuration::getInstance()::get('basedir')) . '\\public', Neodock\Framework\Configuration::get('baseurl'), $recipe['recipe_filepath']))?>" class="btn btn-info">Download Recipe PDF</a>
                                 </div>
-                                <a href="index.php?controller=Home&page=ViewRecipe&id=<?=$recipe['recipe_id']?>" class="btn btn-primary">View Recipe</a>
+
                             </div>
                         </div>
                     </div>

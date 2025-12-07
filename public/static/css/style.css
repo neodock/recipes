@@ -108,3 +108,7 @@ footer {
     transition: background-color 0.2s;
     display: block;
 }
+
+.btn {
+    padding: 3px 3px 3px 3px;
+}
