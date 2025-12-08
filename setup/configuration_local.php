@@ -1,6 +1,6 @@
 <?php
 //Set root installation directory of the application
-$config->set('basedir', 'E:/dev/recipes');
+$config->set('basedir', 'E:/recipes');
 
 //Debugging - enable or disable with true|false
 $config->set('debug', false);
