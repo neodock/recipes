@@ -1,2 +1,9 @@
 parameters:
     level: 8
+    paths:
+        - public
+        - Neodock
+        - Neodock/Framework
+        - Neodock/Recipes
+        - Neodock/Web
+        - tests

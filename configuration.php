@@ -70,7 +70,7 @@ namespace Neodock
     //(true|false) Enable setting recommended session config via ini_set
     $config->set('session_config', false);
 
-    //Session storage provider (file, database)
+    //(file|database) Session storage provider
     $config->set('session_storage', 'file');
 
 //Site Setup

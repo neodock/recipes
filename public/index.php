@@ -26,18 +26,27 @@ namespace Neodock
         Framework\Logger::getInstance()->informational('Request to ' . $_SERVER['REQUEST_URI'] . ' received.');
 
         //default page -- /Home/Index if not already in a proper rewritten URL
-        if (!array_key_exists('controller', $_GET) || !array_key_exists('page', $_GET))
-        {
+        if (!array_key_exists('controller', $_GET) || !array_key_exists('page', $_GET)) {
             $_GET['controller'] = 'Home';
             $_GET['page'] = 'Index';
         }
 
         //initialize session handler
+        if (Framework\Configuration::get('session_config'))
+        {
+            Web\Session::configureSessionINI();
+        }
+
         if (Framework\Configuration::get('session_enable') && Framework\Configuration::get('session_storage') == 'database')
         {
-            //Neodock\Web\Session() will configure and override session with the Neodock Session DB handler
             $session = new Web\Session();
+            session_set_save_handler($session, true);
+            session_start();
+        } else if (Framework\Configuration::get('session_enable')) {
+            session_start();
         }
+
+        $_SESSION['last_request_time'] = time();
 
         //handle theme, search, parameters, etc.
         // Get current theme preference (default to dark)

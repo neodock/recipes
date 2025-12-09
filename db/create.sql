@@ -62,6 +62,13 @@ CREATE TABLE dbo.ratings (
 CREATE NONCLUSTERED INDEX IX_ratings_datedeleted ON dbo.ratings (datedeleted);
 CREATE NONCLUSTERED INDEX IX_ratings_recipe_id ON dbo.ratings (recipe_id);
 ALTER TABLE dbo.ratings ADD CONSTRAINT FK_ratings_recipes FOREIGN KEY (recipe_id) REFERENCES dbo.recipes(id);
+
+CREATE TABLE dbo.session (
+    id VARCHAR(32) NOT NULL PRIMARY KEY,
+    access DATETIME2 NOT NULL,
+    data VARCHAR(MAX),
+	client_ip VARCHAR(255)
+);
 GO
 
 CREATE USER neodockrecipes WITH PASSWORD = 'neodockchef01F&';

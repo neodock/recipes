@@ -10,7 +10,7 @@
     }
   ],
   "require-dev": {
-    "phpstan/phpstan": "^2.1"
+    "phpstan/phpstan": "@stable"
   },
   "require": {
     "ext-pdo": "*"
