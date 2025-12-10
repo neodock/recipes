@@ -18,6 +18,12 @@ $config->set('db_dsn', 'sqlsrv:Server=sqlservername,1433;Database=NeodockRecipes
 $config->set('db_login', 'neodockrecipes');
 $config->set('db_password', 'supersecretpassword');
 
+//Session management
+$config->set('session_enable', true);
+$config->set('session_config', true);
+$config->set('session_storage', 'database');
+
+
 //Recipes configuration
 $config->set('enable_ratings', false);
 $config->set('ratings_trusted_ips',
