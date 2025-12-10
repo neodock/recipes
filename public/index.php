@@ -48,6 +48,15 @@ namespace Neodock
 
         $_SESSION['last_request_time'] = time();
 
+        //handle global sort preference save to session
+        if (!isset($_SESSION['sort'])) {
+            $_SESSION['sort'] = Framework\Configuration::getInstance()->get('defaultsort');
+        }
+
+        if (isset($_GET['sort'])) {
+            $_SESSION['sort'] = $_GET['sort'];
+        }
+
         //handle theme, search, parameters, etc.
         // Get current theme preference (default to dark)
         $theme = $_COOKIE['theme'] ?? 'dark';

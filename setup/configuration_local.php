@@ -10,7 +10,10 @@ $config->set('logger', false);
 $config->set('logger_minimumloglevel', \Neodock\Framework\LogLevel::Informational());
 $config->set('logger_logfile', $config->get('basedir') . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'neodock_recipes.log');
 
+//Site settings
 $config->set('baseurl', "https://recipes.neodock.net/recipes");
+$config->set('sitetitle', 'Neodock Recipes');
+$config->set('defaultsort', 'alpha');
 
 //Database
 $config->set('db_type', 'sqlsrv');
@@ -23,8 +26,7 @@ $config->set('session_enable', true);
 $config->set('session_config', true);
 $config->set('session_storage', 'database');
 
-
-//Recipes configuration
+//Ratings configuration
 $config->set('enable_ratings', false);
 $config->set('ratings_trusted_ips',
     [
