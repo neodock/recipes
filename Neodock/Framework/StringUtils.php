@@ -3,7 +3,7 @@ namespace Neodock\Framework;
 
 class StringUtils
 {
-    public static function TitleCase($title): string
+    public static function TitleCase(string $title): string
     {
         // Our array of 'small words' which shouldn't be capitalised if
         // they aren't the first word. Add your own words to taste.
@@ -25,5 +25,28 @@ class StringUtils
 
         // Join the words back into a string
         return implode(' ', $words);
+    }
+
+    public static function CurrentUrlWithoutSort(): string {
+        $parts = parse_url($_SERVER['REQUEST_URI']);
+
+        $query = [];
+        if (!empty($parts['query'])) {
+            parse_str($parts['query'], $query);
+
+            // Remove `sort` if present
+            unset($query['sort']);
+        }
+
+        // Rebuild query string
+        $newQuery = http_build_query($query);
+
+        // Rebuild URL
+        $newUrl =
+            ($parts['host'] ?? '') .
+            ($parts['path'] ?? '') .
+            ($newQuery ? '?'.$newQuery : '');
+
+        return $newUrl;
     }
 }
