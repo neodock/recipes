@@ -79,6 +79,7 @@ namespace Neodock
     $config->set('baseurl', "https://www.neodock.net/recipes");
     //(alpha|rating|dateadded)sets the default sort order for recipe lists - this resets with a new session
     $config->set('defaultsort', 'alpha');
+    $config->set('numberoftopratedrecipes', 100);
 
 //Database
     //database type (mysql, pgsql, sqlsrv)

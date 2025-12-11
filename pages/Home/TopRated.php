@@ -1,13 +1,13 @@
 <?php
-    $recipes = \Neodock\Recipes\RecipeUtilities::GetTopRatedRecipes();
+    $recipes = \Neodock\Recipes\RecipeUtilities::GetTopRatedRecipes(\Neodock\Framework\Configuration::getInstance()->get('numberoftopratedrecipes'));
 ?>
 <!-- Main Content -->
 <div class="container mt-4">
-    <h1 class="mb-4">Top Rated Recipes</h1>
+    <h1 class="mb-4">Top <?=\Neodock\Framework\Configuration::getInstance()->get('numberoftopratedrecipes')?> Rated Recipes</h1>
     <?php if (empty($recipes)): ?>
         <div class="alert alert-info">No rated recipes found yet. Be the first to rate a recipe!</div>
     <?php else: ?>
-        <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="row row-cols-1 row-cols-md-4 g-4">
             <?php foreach ($recipes as $recipe): ?>
                 <div class="col">
                     <div class="card h-100">
