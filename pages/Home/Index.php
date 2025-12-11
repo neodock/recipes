@@ -35,7 +35,7 @@
                             $categories = \Neodock\Recipes\RecipeUtilities::GetCategories();
                             foreach ($categories as $category):
                                 ?>
-                                <div class="col-md-12">
+                                <div class="col-md-3">
                                     <a href="index.php?controller=Home&page=Index&category=<?=$category['id']; ?>" class="text-decoration-none">
                                         <div class="d-flex align-items-center">
                                             <i class="fas fa-folder me-2 text-warning"></i>
