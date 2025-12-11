@@ -40,11 +40,14 @@ namespace Neodock\Framework
          * @param LogLevel $level
          * @param string $message
          * @param array $context
-         * @return void
          */
-        public function log($level, $message, array $context = array())
+        public function log($level, $message, array $context = array()) : void
         {
             $config = Configuration::getInstance();
+
+            if ($config->get('logger') !== true) {
+                return;
+            }
 
             //is the level of this message <= the logging level from Config?
             if ($level->getLogLevelNumber() <= Configuration::get('logger_minimumloglevel')->getLogLevelNumber())
