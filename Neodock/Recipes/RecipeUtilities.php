@@ -102,7 +102,8 @@ class RecipeUtilities
         c.id AS category_id,
         c.name AS category_name,
         COALESCE((SELECT AVG(rating) FROM dbo.ratings WHERE datedeleted IS NULL AND recipe_id = r.id), 0) AS ratings_average,
-        (SELECT COUNT(1) FROM dbo.ratings WHERE datedeleted IS NULL AND recipe_id = r.id) AS ratings_count
+        (SELECT COUNT(1) FROM dbo.ratings WHERE datedeleted IS NULL AND recipe_id = r.id) AS ratings_count,
+        r.dateadded
     FROM	
         dbo.recipes r
         INNER JOIN dbo.categories c ON r.category_id = c.id
@@ -118,6 +119,19 @@ class RecipeUtilities
     if ($search_query != '') {
         $query .= ' AND r.title LIKE :search_query';
         $params[':search_query'] = '%' . $search_query . '%';
+    }
+
+    if (isset($_SESSION['sort']))
+    {
+        $query .= ' ORDER BY ';
+        if ($_SESSION['sort'] == 'rating') {
+            $query .= 'ratings_average DESC';
+        } else if ($_SESSION['sort'] == 'dateadded') {
+            $query .= 'r.dateadded DESC';
+        } else {
+            $query .= 'r.title ASC';
+        }
+
     }
 
     $db->query($query);

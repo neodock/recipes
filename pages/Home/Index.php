@@ -13,6 +13,13 @@
                 <h4>Category: <?=\Neodock\Recipes\RecipeUtilities::GetCategoryName($category_filter)?></h4>
             <?php endif; ?>
             <a href="index.php" class="btn btn-sm btn-secondary">Clear filters</a>
+
+            <span class="float-end">
+                <a href="<?=\Neodock\Framework\StringUtils::CurrentUrlWithoutSort()?>&sort=alpha" class="btn btn-sm <?php if ($_SESSION['sort'] == 'alpha') { echo 'btn-secondary'; } else { echo 'btn-primary'; } ?>">Sort by Title</a>
+                <a href="<?=\Neodock\Framework\StringUtils::CurrentUrlWithoutSort()?>&sort=rating" class="btn btn-sm <?php if ($_SESSION['sort'] == 'rating') { echo 'btn-secondary'; } else { echo 'btn-primary'; } ?>">Sort by Rating</a>
+                <a href="<?=\Neodock\Framework\StringUtils::CurrentUrlWithoutSort()?>&sort=dateadded" class="btn btn-sm <?php if ($_SESSION['sort'] == 'dateadded') { echo 'btn-secondary'; } else { echo 'btn-primary'; } ?>">Sort by Date Added</a>
+            </span>
+
         </div>
     <?php else: ?>
         <div class="jumbotron p-5 mb-4 rounded">
@@ -92,6 +99,7 @@
                         <div class="card h-100">
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo \Neodock\Framework\StringUtils::TitleCase($recipe['recipe_title']); ?></h5>
+                                <p class="card-text small"><?php echo 'Added: ' . date('F j, Y', strtotime($recipe['dateadded'])); ?></p>
                                 <div class="mb-2">
                                     <?php echo \Neodock\Recipes\RecipeUtilities::DisplayRating($recipe['ratings_average']); ?>
                                     <small class="text-muted">(<?php echo $recipe['ratings_count']; ?> ratings)</small>&nbsp;&nbsp;

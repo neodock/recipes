@@ -77,6 +77,8 @@ namespace Neodock
     //fully qualified or relative base url to prepend to generated links
     $config->set('sitetitle', 'Neodock Recipes');
     $config->set('baseurl', "https://www.neodock.net/recipes");
+    //(alpha|rating|dateadded)sets the default sort order for recipe lists - this resets with a new session
+    $config->set('defaultsort', 'alpha');
 
 //Database
     //database type (mysql, pgsql, sqlsrv)
