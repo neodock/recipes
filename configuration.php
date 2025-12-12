@@ -80,6 +80,7 @@ namespace Neodock
     //(alpha|rating|dateadded)sets the default sort order for recipe lists - this resets with a new session
     $config->set('defaultsort', 'alpha');
     $config->set('numberoftopratedrecipes', 100);
+    $config->set('matomoenabled', false);
 
 //Database
     //database type (mysql, pgsql, sqlsrv)

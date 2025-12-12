@@ -13,6 +13,23 @@
     <link href="%%%BASEURL%%%/static/css/style.css" rel="stylesheet">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <?php if (\Neodock\Framework\Configuration::getInstance()->get('matomoenabled')) { ?>
+        <!-- Matomo -->
+        <script>
+            var _paq = window._paq = window._paq || [];
+            /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+            _paq.push(['trackPageView']);
+            _paq.push(['enableLinkTracking']);
+            (function() {
+                var u="<?=\Neodock\Framework\Configuration::getInstance()->get('matomourl')?>";
+                _paq.push(['setTrackerUrl', u+'matomo.php']);
+                _paq.push(['setSiteId', '<?=\Neodock\Framework\Configuration::getInstance()->get('matomositeid')?>']);
+                var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+                g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+            })();
+        </script>
+        <!-- End Matomo Code -->
+    <?php } ?>
 </head>
 <body>
 <!-- Navigation -->
