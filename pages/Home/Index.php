@@ -1,6 +1,6 @@
 <?php
     global $theme, $search_query, $category_filter, $recipes, $top_rated_recipes;
-    $this->setTitle('Home');
+    $this->setTitle('%%%SITETITLE%%% - Home');
 ?>
 <!-- Main Content -->
 <div class="container mt-4">
@@ -93,6 +93,11 @@
     <?php else: ?>
         <!-- Only show recipes when a category is selected or search is performed -->
         <?php if (!empty($recipes)): ?>
+            <?php
+            if (!empty($category_filter)) {
+                $this->setTitle('%%%SITETITLE%%% - View Category - ' . \Neodock\Recipes\RecipeUtilities::GetCategoryName($category_filter));
+            }
+            ?>
             <div class="row row-cols-1 g-4">
                 <?php foreach ($recipes as $recipe): ?>
                     <div class="col">
@@ -118,3 +123,8 @@
         <?php endif; ?>
     <?php endif; ?>
 </div>
+<?php
+if (!empty($_GET['search'])) {
+    $this->setTitle('%%%SITETITLE%%% - Search for [' . \Neodock\Framework\StringUtils::HTMLSafe($_GET['search']) . ']');
+}
+?>

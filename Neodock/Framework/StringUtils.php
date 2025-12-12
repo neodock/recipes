@@ -49,4 +49,8 @@ class StringUtils
 
         return $newUrl;
     }
+
+    public static function HTMLSafe(string $text): string {
+        return preg_replace("/[^A-Za-z0-9 ]/", " ", $text);
+    }
 }

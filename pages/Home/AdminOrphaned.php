@@ -1,4 +1,5 @@
 <?php
+    $this->setTitle('%%%SITETITLE%%% - Admin Orphaned Recipes');
     $db = new \Neodock\Framework\Database();
 
     $currentfiles = \Neodock\Recipes\RecipeUtilities::ReadRecipesFromDisk();

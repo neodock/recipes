@@ -151,11 +151,17 @@ namespace Neodock\Web
             $templatecontent = ob_get_clean();
             \Neodock\Framework\Debug::logMessage('...page rendering completed.');
 
+            \Neodock\Framework\Debug::logMessage('Current page title is \'' . $this->title . '\'.');
+            if (empty($this->title)) {
+                $this->title = \Neodock\Framework\Configuration::get('sitetitle');
+            }
+
             $config = \Neodock\Framework\Configuration::getInstance();
             $baseurl = $config->get('baseurl');
 
             $output = str_replace('%%%PAGECONTENT%%%', $pagecontent, $templatecontent);
             $output = str_replace('%%%PAGETITLE%%%', $this->title, $output);
+            $output = str_replace('%%%SITETITLE%%%', \Neodock\Framework\Configuration::get('sitetitle'), $output);
             $output = str_replace('%%%BASEURL%%%', $baseurl, $output);
 
             return $output;

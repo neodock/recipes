@@ -24,6 +24,8 @@
 
     // Get current rating information
     $rating_info = \Neodock\Recipes\RecipeUtilities::GetRecipeRatings($recipe_info['recipe_id']);
+
+    $this->setTitle('%%%SITETITLE%%% - View Recipe - ' . $recipe_info['title']);
 ?>
 <div class="container mt-4">
     <nav aria-label="breadcrumb">

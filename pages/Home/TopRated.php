@@ -1,5 +1,7 @@
 <?php
     $recipes = \Neodock\Recipes\RecipeUtilities::GetTopRatedRecipes(\Neodock\Framework\Configuration::getInstance()->get('numberoftopratedrecipes'));
+
+    $this->setTitle('%%%SITETITLE%%% - Top Rated Recipes');
 ?>
 <!-- Main Content -->
 <div class="container mt-4">

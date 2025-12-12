@@ -1,4 +1,6 @@
 <?php
+    $this->setTitle('%%%SITETITLE%%% - Admin Orphaned Recipes');
+
     $db = new \Neodock\Framework\Database();
     $db->query('SELECT * FROM dbo.categories WHERE datedeleted IS NULL');
     $db->execute();

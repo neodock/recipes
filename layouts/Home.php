@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?=\Neodock\Framework\Configuration::get('sitetitle')?></title>
+    <title>%%%PAGETITLE%%%</title>
     <!-- Bootstrap CSS -->
     <link href="%%%BASEURL%%%/static/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
