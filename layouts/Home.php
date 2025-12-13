@@ -13,22 +13,30 @@
     <link href="%%%BASEURL%%%/static/css/style.css" rel="stylesheet">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="%%%BASEURL%%%/static/js/jq.js" type="application/javascript"></script>
     <?php if (\Neodock\Framework\Configuration::getInstance()->get('matomoenabled')) { ?>
-        <!-- Matomo -->
         <script>
             var _paq = window._paq = window._paq || [];
-            /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+            _paq.push(['setCustomRequestProcessing', (params) => {
+                $.ajax({
+                    type: "POST",
+                    url: "<?=\Neodock\Framework\Configuration::getInstance()->get('matomourl')?>pelican",
+                    data: {z: btoa(params)}
+                });
+
+                return null;
+            }]);
             _paq.push(['trackPageView']);
             _paq.push(['enableLinkTracking']);
             (function() {
                 var u="<?=\Neodock\Framework\Configuration::getInstance()->get('matomourl')?>";
-                _paq.push(['setTrackerUrl', u+'z.php']);
+                _paq.push(['setTrackerUrl', u+'pelican']);
                 _paq.push(['setSiteId', '<?=\Neodock\Framework\Configuration::getInstance()->get('matomositeid')?>']);
                 var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-                g.async=true; g.src=u+'z.js'; s.parentNode.insertBefore(g,s);
+                g.async=true; g.src=u+'cardinal'; s.parentNode.insertBefore(g,s);
             })();
         </script>
-        <!-- End Matomo Code -->
+        <noscript><p><img referrerpolicy="no-referrer-when-downgrade" src="<?=\Neodock\Framework\Configuration::getInstance()->get('matomourl')?>sparrow?idsite=<?=\Neodock\Framework\Configuration::getInstance()->get('matomositeid')?>&rec=1" style="border:0;" alt="" /></p></noscript>
     <?php } ?>
 </head>
 <body>
